@@ -1,10 +1,8 @@
 package com.shimon.transport.entity;
 
 import com.shimon.transport.enums.UserType;
-import io.hypersistence.utils.hibernate.type.basic.PostgreSQLEnumType;
 import jakarta.persistence.*;
 import org.hibernate.annotations.CreationTimestamp;
-import org.hibernate.annotations.Type;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.LocalDateTime;
@@ -34,8 +32,7 @@ public class User {
     private String addressText;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "user_type", nullable = false, columnDefinition = "user_type")
-    @Type(PostgreSQLEnumType.class)
+    @Column(name = "user_type", nullable = false, length = 50)
     private UserType userType = UserType.EMPLOYEE;
 
     @Column(name = "can_request_transport", nullable = false)

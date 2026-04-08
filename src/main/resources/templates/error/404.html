@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Not Found — Shift Transport System</title>
+    <link rel="stylesheet" th:href="@{/css/main.css}">
+</head>
+<body>
+<div class="container">
+    <h2>404 — Not Found</h2>
+    <p th:text="${error}">The requested resource was not found.</p>
+    <a th:href="@{/employee/dashboard}" class="btn btn-secondary" style="margin-top:1rem;">Back to Dashboard</a>
+</div>
+</body>
+</html>

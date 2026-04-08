@@ -1,10 +1,8 @@
 package com.shimon.transport.entity;
 
 import com.shimon.transport.enums.TransportEventStatus;
-import io.hypersistence.utils.hibernate.type.basic.PostgreSQLEnumType;
 import jakarta.persistence.*;
 import org.hibernate.annotations.CreationTimestamp;
-import org.hibernate.annotations.Type;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.LocalDate;
@@ -40,8 +38,7 @@ public class TransportEvent {
     private boolean transportRequired = true;
 
     @Enumerated(EnumType.STRING)
-    @Column(nullable = false, columnDefinition = "transport_event_status")
-    @Type(PostgreSQLEnumType.class)
+    @Column(nullable = false, length = 30)
     private TransportEventStatus status = TransportEventStatus.OPEN;
 
     @ManyToOne(fetch = FetchType.LAZY)

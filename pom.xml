@@ -55,13 +55,6 @@
             <scope>runtime</scope>
         </dependency>
 
-        <!-- Hibernate support for PostgreSQL enums -->
-        <dependency>
-            <groupId>io.hypersistence</groupId>
-            <artifactId>hypersistence-utils-hibernate-63</artifactId>
-            <version>3.7.3</version>
-        </dependency>
-
         <!-- DevTools (auto-restart during development) -->
         <dependency>
             <groupId>org.springframework.boot</groupId>

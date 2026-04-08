@@ -2,10 +2,8 @@ package com.shimon.transport.entity;
 
 import com.shimon.transport.enums.RequestDirection;
 import com.shimon.transport.enums.RequestStatus;
-import io.hypersistence.utils.hibernate.type.basic.PostgreSQLEnumType;
 import jakarta.persistence.*;
 import org.hibernate.annotations.CreationTimestamp;
-import org.hibernate.annotations.Type;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.LocalDateTime;
@@ -35,13 +33,11 @@ public class TransportRequest {
     private TransportEvent transportEvent;
 
     @Enumerated(EnumType.STRING)
-    @Column(nullable = false, columnDefinition = "request_direction")
-    @Type(PostgreSQLEnumType.class)
+    @Column(nullable = false, length = 20)
     private RequestDirection direction;
 
     @Enumerated(EnumType.STRING)
-    @Column(nullable = false, columnDefinition = "request_status")
-    @Type(PostgreSQLEnumType.class)
+    @Column(nullable = false, length = 20)
     private RequestStatus status = RequestStatus.PENDING;
 
     @CreationTimestamp

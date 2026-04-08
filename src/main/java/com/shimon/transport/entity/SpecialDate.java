@@ -1,10 +1,8 @@
 package com.shimon.transport.entity;
 
 import com.shimon.transport.enums.SpecialDateType;
-import io.hypersistence.utils.hibernate.type.basic.PostgreSQLEnumType;
 import jakarta.persistence.*;
 import org.hibernate.annotations.CreationTimestamp;
-import org.hibernate.annotations.Type;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -25,8 +23,7 @@ public class SpecialDate {
     private LocalDate specialDate;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "date_type", nullable = false, columnDefinition = "special_date_type")
-    @Type(PostgreSQLEnumType.class)
+    @Column(name = "date_type", nullable = false, length = 30)
     private SpecialDateType dateType;
 
     @Column(length = 200)

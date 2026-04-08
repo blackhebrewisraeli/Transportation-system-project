@@ -1,9 +1,7 @@
 package com.shimon.transport.entity;
 
 import com.shimon.transport.enums.ShiftName;
-import io.hypersistence.utils.hibernate.type.basic.PostgreSQLEnumType;
 import jakarta.persistence.*;
-import org.hibernate.annotations.Type;
 
 import java.time.LocalTime;
 
@@ -20,8 +18,7 @@ public class ShiftType {
     private Long id;
 
     @Enumerated(EnumType.STRING)
-    @Column(nullable = false, unique = true, columnDefinition = "shift_name")
-    @Type(PostgreSQLEnumType.class)
+    @Column(nullable = false, unique = true, length = 20)
     private ShiftName name;
 
     @Column(name = "start_time", nullable = false)
