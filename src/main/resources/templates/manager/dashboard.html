@@ -9,8 +9,11 @@
 
 <nav class="navbar">
     <span class="navbar-title">Shift Transport System — Manager</span>
-    <span class="navbar-user" th:text="'Hello, ' + ${session.userName}"></span>
-    <a th:href="@{/auth/logout}" class="btn btn-small">Logout</a>
+    <div style="display:flex; align-items:center; gap:1rem;">
+        <a th:href="@{/employee/dashboard}" class="btn btn-small btn-secondary">My Requests</a>
+        <span class="navbar-user" th:text="'Hello, ' + ${session.userName}"></span>
+        <a th:href="@{/auth/logout}" class="btn btn-small">Logout</a>
+    </div>
 </nav>
 
 <main class="container">
