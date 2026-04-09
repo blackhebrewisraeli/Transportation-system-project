@@ -19,4 +19,7 @@ public interface UserRepository extends JpaRepository<User, Long> {
     List<User> findByCanRequestTransportTrueAndActiveTrue();
 
     List<User> findByActiveTrue();
+
+    /** Returns all users sorted alphabetically by full name — used in the admin user list. */
+    List<User> findAllByOrderByFullNameAsc();
 }

@@ -7,6 +7,8 @@ import com.shimon.transport.repository.UserRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 /**
  * Handles user profile operations available to the user themselves.
  * Admin-level user management (create, deactivate, assign roles) will live in a future AdminService.
@@ -28,6 +30,24 @@ public class UserService {
     public User getById(Long userId) {
         return userRepository.findById(userId)
                 .orElseThrow(() -> new ResourceNotFoundException("User", userId));
+    }
+
+    /**
+     * Returns all users ordered by full name — used by the admin user-management page.
+     */
+    @Transactional(readOnly = true)
+    public List<User> getAllUsers() {
+        return userRepository.findAllByOrderByFullNameAsc();
+    }
+
+    /**
+     * Updates only the full name of a user. System-admin privilege only.
+     */
+    public void updateUserName(Long userId, String newName) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new ResourceNotFoundException("User", userId));
+        user.setFullName(newName);
+        userRepository.save(user);
     }
 
     /**

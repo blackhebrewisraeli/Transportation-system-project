@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title th:text="'Error ' + ${errorCode} + ' — Shift Transport System'">Error</title>
+    <link rel="stylesheet" th:href="@{/css/main.css}">
+    <style>
+        /* Full-screen dimmed overlay */
+        body {
+            margin: 0;
+            background: #f4f6f9;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+        }
+
+        .error-backdrop {
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.45);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 9999;
+        }
+
+        .error-dialog {
+            background: #fff;
+            border-radius: 12px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            width: min(480px, 92vw);
+            padding: 2rem 2.25rem;
+            position: relative;
+            animation: pop-in 0.18s ease-out;
+        }
+
+        @keyframes pop-in {
+            from { transform: scale(0.92); opacity: 0; }
+            to   { transform: scale(1);   opacity: 1; }
+        }
+
+        .error-code-badge {
+            display: inline-block;
+            background: #c0392b;
+            color: #fff;
+            font-size: 0.75rem;
+            font-weight: 700;
+            letter-spacing: 0.06em;
+            padding: 0.2rem 0.6rem;
+            border-radius: 4px;
+            margin-bottom: 0.75rem;
+        }
+
+        /* Green for 404, orange for 400, red for 500 */
+        .error-code-badge.code-404 { background: #2980b9; }
+        .error-code-badge.code-400 { background: #e67e22; }
+        .error-code-badge.code-500 { background: #c0392b; }
+
+        .error-dialog h2 {
+            margin: 0 0 0.5rem;
+            font-size: 1.25rem;
+            color: #222;
+        }
+
+        .error-dialog p.error-body {
+            margin: 0 0 1.5rem;
+            color: #555;
+            font-size: 0.9rem;
+            line-height: 1.5;
+            word-break: break-word;
+        }
+
+        .error-dialog .error-actions {
+            display: flex;
+            gap: 0.75rem;
+        }
+    </style>
+</head>
+<body>
+
+<div class="error-backdrop">
+    <div class="error-dialog" role="alertdialog" aria-modal="true"
+         th:attr="aria-label='Error ' + ${errorCode}">
+
+        <!-- Error code badge -->
+        <div class="error-code-badge"
+             th:classappend="'code-' + ${errorCode}"
+             th:text="'HTTP ' + ${errorCode}">
+            HTTP 500
+        </div>
+
+        <!-- Title -->
+        <h2 th:text="${errorTitle}">Error</h2>
+
+        <!-- Message (the actual reason) -->
+        <p class="error-body" th:text="${errorMessage}">An unexpected error occurred.</p>
+
+        <!-- Actions -->
+        <div class="error-actions">
+            <button class="btn btn-primary" onclick="history.back()">← Go back</button>
+            <a th:href="@{/employee/dashboard}" class="btn btn-secondary">Dashboard</a>
+        </div>
+
+    </div>
+</div>
+
+</body>
+</html>

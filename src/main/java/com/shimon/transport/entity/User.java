@@ -31,6 +31,10 @@ public class User {
     @Column(name = "address_text", columnDefinition = "TEXT")
     private String addressText;
 
+    /** BCrypt hash of the user's password. Null until the user sets a password. */
+    @Column(name = "password_hash", length = 255)
+    private String passwordHash;
+
     @Enumerated(EnumType.STRING)
     @Column(name = "user_type", nullable = false, length = 50)
     private UserType userType = UserType.EMPLOYEE;
@@ -103,6 +107,14 @@ public class User {
 
     public void setAddressText(String addressText) {
         this.addressText = addressText;
+    }
+
+    public String getPasswordHash() {
+        return passwordHash;
+    }
+
+    public void setPasswordHash(String passwordHash) {
+        this.passwordHash = passwordHash;
     }
 
     public UserType getUserType() {

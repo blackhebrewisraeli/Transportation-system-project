@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>User Management — Shift Transport System</title>
+    <link rel="stylesheet" th:href="@{/css/main.css}">
+</head>
+<body>
+
+<nav class="navbar">
+    <span class="navbar-title">Shift Transport System</span>
+    <span class="navbar-user" th:text="'Hello, ' + ${session.userName}"></span>
+</nav>
+
+<div class="app-layout">
+    <aside th:replace="~{fragments/nav :: sidebar}"></aside>
+
+    <main class="main-content">
+
+        <div th:if="${successMessage}" class="alert alert-success" th:text="${successMessage}"></div>
+        <div th:if="${errorMessage}"   class="alert alert-error"   th:text="${errorMessage}"></div>
+
+        <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:1rem;">
+            <h2>User Management</h2>
+            <span class="badge badge-blue" style="font-size:0.8rem;">Admin only</span>
+        </div>
+
+        <p style="color:#777; font-size:0.88rem; margin-bottom:1.25rem;">
+            As system administrator you can edit the full name of any user.
+            Phone number and role flags must be changed directly in the database.
+        </p>
+
+        <div th:if="${#lists.isEmpty(users)}" class="empty-state">
+            No users found.
+        </div>
+
+        <table th:unless="${#lists.isEmpty(users)}" class="table">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Full Name</th>
+                    <th>Phone</th>
+                    <th>Type</th>
+                    <th>Roles</th>
+                    <th>Status</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:each="u : ${users}">
+                    <td th:text="${u.id}" style="color:#aaa; font-size:0.82rem;"></td>
+                    <td th:text="${u.fullName}" style="font-weight:500;"></td>
+                    <td th:text="${u.phoneNumber}" style="font-size:0.88rem;"></td>
+                    <td>
+                        <span th:text="${#strings.capitalize(#strings.toLowerCase(u.userType))}"></span>
+                    </td>
+                    <td>
+                        <span th:if="${u.systemAdmin}"   class="badge badge-blue"  style="margin-right:2px;">Admin</span>
+                        <span th:if="${u.shiftManager}"  class="badge badge-green" style="margin-right:2px;">Manager</span>
+                        <span th:if="${u.canDrive}"       class="badge badge-gray"  style="margin-right:2px;">Driver</span>
+                        <span th:if="${u.canRequestTransport}" class="badge badge-gray">Passenger</span>
+                    </td>
+                    <td>
+                        <span th:if="${u.active}"  class="badge badge-green">Active</span>
+                        <span th:unless="${u.active}" class="badge badge-red">Inactive</span>
+                    </td>
+                    <td>
+                        <a th:href="@{/admin/users/{id}/edit-name(id=${u.id})}"
+                           class="btn btn-small btn-secondary">✏ Edit name</a>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+
+    </main>
+</div>
+
+</body>
+</html>

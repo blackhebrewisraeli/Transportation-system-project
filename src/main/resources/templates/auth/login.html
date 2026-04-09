@@ -11,10 +11,12 @@
     <h1>Shift Transport System</h1>
     <h2>Sign In</h2>
 
-    <div th:if="${errorMessage}" class="alert alert-error" th:text="${errorMessage}"></div>
+    <div th:if="${errorMessage}"   class="alert alert-error"   th:text="${errorMessage}"></div>
     <div th:if="${successMessage}" class="alert alert-success" th:text="${successMessage}"></div>
+    <div th:if="${infoMessage}"    class="alert alert-info"    th:text="${infoMessage}"></div>
 
     <form method="post" th:action="@{/auth/login}">
+
         <div class="form-group">
             <label for="phoneNumber">Phone Number</label>
             <input type="tel"
@@ -24,9 +26,43 @@
                    required
                    autofocus>
         </div>
+
+        <div class="form-group">
+            <label for="password">Password</label>
+            <div style="position:relative;">
+                <input type="password"
+                       id="password"
+                       name="password"
+                       placeholder="Enter your password"
+                       required
+                       autocomplete="current-password"
+                       style="padding-right:2.5rem;">
+                <!-- Show / hide toggle -->
+                <button type="button"
+                        onclick="togglePassword()"
+                        title="Show / hide password"
+                        style="position:absolute; right:0.6rem; top:50%; transform:translateY(-50%);
+                               background:none; border:none; cursor:pointer; font-size:1rem; color:#888;">
+                    👁
+                </button>
+            </div>
+        </div>
+
         <button type="submit" class="btn btn-primary btn-full">Sign In</button>
+
     </form>
+
+    <p style="margin-top:1rem; font-size:0.82rem; color:#aaa; text-align:center;">
+        First time logging in? You will be prompted to set a password after entering your phone number.
+    </p>
 </div>
+
+<script>
+function togglePassword() {
+    const input = document.getElementById('password');
+    input.type = input.type === 'password' ? 'text' : 'password';
+}
+</script>
 
 </body>
 </html>

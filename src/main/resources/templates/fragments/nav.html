@@ -26,6 +26,15 @@
             <hr class="sidebar-divider">
         </div>
 
+        <!-- ── Admin ── -->
+        <div th:if="${session.isSystemAdmin}">
+            <p class="sidebar-section-title">Administration</p>
+            <div class="sidebar-section">
+                <a th:href="@{/admin/users}" class="sidebar-link">👥 User management</a>
+            </div>
+            <hr class="sidebar-divider">
+        </div>
+
         <!-- ── Driver ── -->
         <div th:if="${session.isDriver}">
             <p class="sidebar-section-title">Driver</p>
@@ -50,8 +59,9 @@
         <!-- ── Account (always visible) ── -->
         <p class="sidebar-section-title">Account</p>
         <div class="sidebar-section">
-            <a th:href="@{/employee/profile}" class="sidebar-link">👤 My profile</a>
-            <a th:href="@{/auth/logout}" class="sidebar-link signout">🚪 Sign out</a>
+            <a th:href="@{/employee/profile}"      class="sidebar-link">👤 My profile</a>
+            <a th:href="@{/auth/change-password}"  class="sidebar-link">🔑 Change password</a>
+            <a th:href="@{/auth/logout}"           class="sidebar-link signout">🚪 Sign out</a>
         </div>
 
     </nav>

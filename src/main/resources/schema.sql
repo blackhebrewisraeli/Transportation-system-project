@@ -16,6 +16,8 @@ CREATE TABLE IF NOT EXISTS users (
     address_text    TEXT,
     user_type       VARCHAR(50)     NOT NULL DEFAULT 'EMPLOYEE',
 
+    password_hash   VARCHAR(255),
+
     can_request_transport   BOOLEAN NOT NULL DEFAULT TRUE,
     can_drive               BOOLEAN NOT NULL DEFAULT FALSE,
     is_shift_manager        BOOLEAN NOT NULL DEFAULT FALSE,
@@ -27,6 +29,9 @@ CREATE TABLE IF NOT EXISTS users (
 );
 
 CREATE INDEX IF NOT EXISTS idx_users_phone ON users (phone_number);
+
+-- Add password_hash if upgrading an existing database (idempotent)
+ALTER TABLE users ADD COLUMN IF NOT EXISTS password_hash VARCHAR(255);
 
 -- ============================================================
 -- TABLE: shift_types

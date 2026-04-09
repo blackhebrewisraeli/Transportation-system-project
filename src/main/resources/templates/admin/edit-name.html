@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Edit User Name — Shift Transport System</title>
+    <link rel="stylesheet" th:href="@{/css/main.css}">
+</head>
+<body>
+
+<nav class="navbar">
+    <span class="navbar-title">Shift Transport System</span>
+    <span class="navbar-user" th:text="'Hello, ' + ${session.userName}"></span>
+</nav>
+
+<div class="app-layout">
+    <aside th:replace="~{fragments/nav :: sidebar}"></aside>
+
+    <main class="main-content">
+
+        <div th:if="${errorMessage}" class="alert alert-error" th:text="${errorMessage}"></div>
+
+        <h2 style="margin-bottom:1.5rem;">Edit User Name</h2>
+
+        <!-- Read-only user info card -->
+        <div class="form-card" style="margin-bottom:1.5rem;">
+            <h3 style="margin-bottom:0.75rem; font-size:0.9rem; color:#555; font-weight:600;
+                       text-transform:uppercase; letter-spacing:0.05em;">User details</h3>
+            <div style="display:grid; grid-template-columns:1fr 1fr; gap:1rem;">
+                <div>
+                    <label style="font-size:0.8rem; color:#888; display:block; margin-bottom:0.15rem;">Current name</label>
+                    <p style="margin:0; font-weight:500;" th:text="${target.fullName}"></p>
+                </div>
+                <div>
+                    <label style="font-size:0.8rem; color:#888; display:block; margin-bottom:0.15rem;">Phone</label>
+                    <p style="margin:0; font-weight:500;" th:text="${target.phoneNumber}"></p>
+                </div>
+                <div>
+                    <label style="font-size:0.8rem; color:#888; display:block; margin-bottom:0.15rem;">User ID</label>
+                    <p style="margin:0; color:#aaa; font-size:0.88rem;" th:text="${target.id}"></p>
+                </div>
+                <div>
+                    <label style="font-size:0.8rem; color:#888; display:block; margin-bottom:0.15rem;">Type</label>
+                    <p style="margin:0;" th:text="${#strings.capitalize(#strings.toLowerCase(target.userType))}"></p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Edit name form -->
+        <div class="form-card">
+            <h3 style="margin-bottom:1rem; font-size:0.9rem; color:#555; font-weight:600;
+                       text-transform:uppercase; letter-spacing:0.05em;">New name</h3>
+
+            <form th:action="@{/admin/users/{id}/edit-name(id=${target.id})}"
+                  method="post"
+                  th:object="${form}">
+
+                <div class="form-group">
+                    <label for="fullName" class="form-label">
+                        Full name <span style="color:#e74c3c;">*</span>
+                    </label>
+                    <input type="text"
+                           id="fullName"
+                           class="form-control"
+                           th:field="*{fullName}"
+                           placeholder="Enter full name"
+                           maxlength="100"
+                           autofocus>
+                    <div th:if="${#fields.hasErrors('fullName')}"
+                         class="field-error"
+                         th:errors="*{fullName}"></div>
+                </div>
+
+                <div style="display:flex; gap:0.75rem; margin-top:1.25rem;">
+                    <button type="submit" class="btn btn-primary">Save</button>
+                    <a th:href="@{/admin/users}" class="btn btn-secondary">Cancel</a>
+                </div>
+
+            </form>
+        </div>
+
+    </main>
+</div>
+
+</body>
+</html>
