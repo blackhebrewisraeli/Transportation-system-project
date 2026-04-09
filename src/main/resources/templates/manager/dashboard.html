@@ -8,66 +8,66 @@
 <body>
 
 <nav class="navbar">
-    <span class="navbar-title">Shift Transport System — Manager</span>
-    <div style="display:flex; align-items:center; gap:1rem;">
-        <a th:href="@{/employee/dashboard}" class="btn btn-small btn-secondary">My Requests</a>
-        <span class="navbar-user" th:text="'Hello, ' + ${session.userName}"></span>
-        <a th:href="@{/auth/logout}" class="btn btn-small">Logout</a>
-    </div>
+    <span class="navbar-title">Shift Transport System</span>
+    <span class="navbar-user" th:text="'Hello, ' + ${session.userName}"></span>
 </nav>
 
-<main class="container">
+<div class="app-layout">
+    <aside th:replace="~{fragments/nav :: sidebar}"></aside>
 
-    <div th:if="${successMessage}" class="alert alert-success" th:text="${successMessage}"></div>
-    <div th:if="${errorMessage}" class="alert alert-error" th:text="${errorMessage}"></div>
+    <main class="main-content">
 
-    <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:1rem;">
-        <h2>Upcoming Transport Events</h2>
-        <a th:href="@{/manager/event/new}" class="btn btn-primary">+ New Event</a>
-    </div>
+        <div th:if="${successMessage}" class="alert alert-success" th:text="${successMessage}"></div>
+        <div th:if="${errorMessage}" class="alert alert-error" th:text="${errorMessage}"></div>
 
-    <div th:if="${#lists.isEmpty(events)}" class="empty-state">
-        No upcoming transport events. Create one to get started.
-    </div>
+        <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:1rem;">
+            <h2>Upcoming Transport Events</h2>
+            <a th:href="@{/manager/event/new}" class="btn btn-primary">+ New Event</a>
+        </div>
 
-    <table th:unless="${#lists.isEmpty(events)}" class="table">
-        <thead>
-            <tr>
-                <th>Date</th>
-                <th>Shift</th>
-                <th>Hours</th>
-                <th>Status</th>
-                <th>Requests</th>
-                <th>Driver</th>
-                <th>Action</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr th:each="event : ${events}">
-                <td th:text="${#temporals.format(event.eventDate, 'dd/MM/yyyy')}"></td>
-                <td th:text="${#strings.capitalize(#strings.toLowerCase(event.shiftName))}"></td>
-                <td th:text="${event.shiftHours}"></td>
-                <td>
-                    <span th:class="'badge ' +
-                        (${event.status.name() == 'OPEN'}      ? 'badge-green' :
-                        (${event.status.name() == 'LOCKED'}    ? 'badge-blue'  :
-                        (${event.status.name() == 'CANCELLED'} ? 'badge-red'   : 'badge-gray')))"
-                          th:text="${#strings.capitalize(#strings.toLowerCase(event.status))}">
-                    </span>
-                </td>
-                <td th:text="${event.requestCount}"></td>
-                <td>
-                    <span th:if="${event.hasDriver}" class="badge badge-green">Assigned</span>
-                    <span th:unless="${event.hasDriver}" class="badge badge-red">Missing</span>
-                </td>
-                <td>
-                    <a th:href="@{/manager/event/{id}(id=${event.id})}" class="btn btn-small btn-secondary">View</a>
-                </td>
-            </tr>
-        </tbody>
-    </table>
+        <div th:if="${#lists.isEmpty(events)}" class="empty-state">
+            No upcoming transport events. Create one to get started.
+        </div>
 
-</main>
+        <table th:unless="${#lists.isEmpty(events)}" class="table">
+            <thead>
+                <tr>
+                    <th>Date</th>
+                    <th>Shift</th>
+                    <th>Hours</th>
+                    <th>Status</th>
+                    <th>Requests</th>
+                    <th>Driver</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:each="event : ${events}">
+                    <td th:text="${#temporals.format(event.eventDate, 'dd/MM/yyyy')}"></td>
+                    <td th:text="${#strings.capitalize(#strings.toLowerCase(event.shiftName))}"></td>
+                    <td th:text="${event.shiftHours}"></td>
+                    <td>
+                        <span th:class="'badge ' +
+                            (${event.status.name() == 'OPEN'}      ? 'badge-green' :
+                            (${event.status.name() == 'LOCKED'}    ? 'badge-blue'  :
+                            (${event.status.name() == 'CANCELLED'} ? 'badge-red'   : 'badge-gray')))"
+                              th:text="${#strings.capitalize(#strings.toLowerCase(event.status))}">
+                        </span>
+                    </td>
+                    <td th:text="${event.requestCount}"></td>
+                    <td>
+                        <span th:if="${event.hasDriver}" class="badge badge-green">Assigned</span>
+                        <span th:unless="${event.hasDriver}" class="badge badge-red">Missing</span>
+                    </td>
+                    <td>
+                        <a th:href="@{/manager/event/{id}(id=${event.id})}" class="btn btn-small btn-secondary">View</a>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+
+    </main>
+</div>
 
 </body>
 </html>

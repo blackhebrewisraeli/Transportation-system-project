@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<body>
+
+<!--
+  Sidebar navigation fragment.
+  Include in any page with:
+    <aside th:replace="~{fragments/nav :: sidebar}"></aside>
+
+  Reads from session:
+    - isManager          (boolean)
+    - isSystemAdmin      (boolean)
+    - isDriver           (boolean)
+    - canRequestTransport (boolean)
+-->
+<aside th:fragment="sidebar" th:with="path=${#request.servletPath}">
+    <nav class="sidebar">
+
+        <!-- ── Operations (Manager / Admin) ── -->
+        <div th:if="${session.isManager}">
+            <p class="sidebar-section-title">Operations</p>
+            <div class="sidebar-section">
+                <a th:href="@{/manager/dashboard}"
+                   th:class="'sidebar-link' + (${#strings.startsWith(path, '/manager/dashboard')} ? ' active' : '')"
+                >📊 Events dashboard</a>
+
+                <a th:href="@{/manager/event/new}"
+                   th:class="'sidebar-link' + (${path == '/manager/event/new'} ? ' active' : '')"
+                >➕ New event</a>
+            </div>
+            <hr class="sidebar-divider">
+        </div>
+
+        <!-- ── Driver ── -->
+        <div th:if="${session.isDriver}">
+            <p class="sidebar-section-title">Driver</p>
+            <div class="sidebar-section">
+                <a th:href="@{/driver/dashboard}"
+                   th:class="'sidebar-link' + (${#strings.startsWith(path, '/driver')} ? ' active' : '')"
+                >🚗 My trips</a>
+            </div>
+            <hr class="sidebar-divider">
+        </div>
+
+        <!-- ── My Transport (anyone with canRequestTransport) ── -->
+        <div th:if="${session.canRequestTransport}">
+            <p class="sidebar-section-title">My transport</p>
+            <div class="sidebar-section">
+                <a th:href="@{/employee/dashboard}"
+                   th:class="'sidebar-link' + (${path == '/employee/dashboard'} ? ' active' : '')"
+                >🚌 My requests</a>
+            </div>
+            <hr class="sidebar-divider">
+        </div>
+
+        <!-- ── Spacer pushes Account to bottom ── -->
+        <div class="sidebar-spacer"></div>
+
+        <!-- ── Account (always visible) ── -->
+        <p class="sidebar-section-title">Account</p>
+        <div class="sidebar-section">
+            <a th:href="@{/employee/profile}"
+               th:class="'sidebar-link' + (${#strings.startsWith(path, '/employee/profile')} ? ' active' : '')"
+            >👤 My profile</a>
+
+            <a th:href="@{/auth/logout}" class="sidebar-link signout">
+                🚪 Sign out
+            </a>
+        </div>
+
+    </nav>
+</aside>
+
+</body>
+</html>

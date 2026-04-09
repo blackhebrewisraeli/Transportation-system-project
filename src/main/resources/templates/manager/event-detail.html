@@ -8,117 +8,120 @@
 <body>
 
 <nav class="navbar">
-    <span class="navbar-title">Shift Transport System — Manager</span>
+    <span class="navbar-title">Shift Transport System</span>
     <span class="navbar-user" th:text="'Hello, ' + ${session.userName}"></span>
-    <a th:href="@{/auth/logout}" class="btn btn-small">Logout</a>
 </nav>
 
-<main class="container">
+<div class="app-layout">
+    <aside th:replace="~{fragments/nav :: sidebar}"></aside>
 
-    <div th:if="${successMessage}" class="alert alert-success" th:text="${successMessage}"></div>
-    <div th:if="${errorMessage}" class="alert alert-error" th:text="${errorMessage}"></div>
+    <main class="main-content">
 
-    <div style="margin-bottom:1rem;">
-        <a th:href="@{/manager/dashboard}" class="btn btn-secondary btn-small">← Back</a>
-    </div>
+        <div th:if="${successMessage}" class="alert alert-success" th:text="${successMessage}"></div>
+        <div th:if="${errorMessage}" class="alert alert-error" th:text="${errorMessage}"></div>
 
-    <!-- Event Header -->
-    <div class="form-card" style="margin-bottom:1.5rem;">
-        <h2 th:text="${#temporals.format(event.eventDate, 'EEEE, dd/MM/yyyy')} + ' — ' + ${#strings.capitalize(#strings.toLowerCase(event.shiftName))}"></h2>
-        <p style="color:#666; margin-top:0.3rem;" th:text="${event.shiftHours}"></p>
-
-        <div style="margin-top:0.75rem; display:flex; gap:1rem; align-items:center; flex-wrap:wrap;">
-            <span th:class="'badge ' +
-                (${event.status.name() == 'OPEN'}      ? 'badge-green' :
-                (${event.status.name() == 'LOCKED'}    ? 'badge-blue'  :
-                (${event.status.name() == 'CANCELLED'} ? 'badge-red'   : 'badge-gray')))"
-                  th:text="${#strings.capitalize(#strings.toLowerCase(event.status))}">
-            </span>
-            <span th:if="${event.notes}" th:text="'Notes: ' + ${event.notes}" style="color:#555; font-size:0.88rem;"></span>
+        <div style="margin-bottom:1rem;">
+            <a th:href="@{/manager/dashboard}" class="btn btn-secondary btn-small">← Back</a>
         </div>
 
-        <!-- Change Status -->
-        <form th:action="@{/manager/event/{id}/status(id=${event.id})}" method="post"
-              style="margin-top:1rem; display:flex; gap:0.5rem; align-items:center;">
-            <select name="status" class="form-group" style="margin:0; width:auto; padding:0.4rem 0.6rem;">
-                <option th:each="s : ${statuses}"
-                        th:value="${s}"
-                        th:text="${#strings.capitalize(#strings.toLowerCase(s))}"
-                        th:selected="${s == event.status}">
-                </option>
-            </select>
-            <button type="submit" class="btn btn-small btn-secondary">Update Status</button>
-        </form>
-    </div>
+        <!-- Event Header -->
+        <div class="form-card" style="margin-bottom:1.5rem;">
+            <h2 th:text="${#temporals.format(event.eventDate, 'EEEE, dd/MM/yyyy')} + ' — ' + ${#strings.capitalize(#strings.toLowerCase(event.shiftName))}"></h2>
+            <p style="color:#666; margin-top:0.3rem;" th:text="${event.shiftHours}"></p>
 
-    <!-- Assign Driver -->
-    <div class="form-card" style="margin-bottom:1.5rem;">
-        <h3>Driver Assignment</h3>
+            <div style="margin-top:0.75rem; display:flex; gap:1rem; align-items:center; flex-wrap:wrap;">
+                <span th:class="'badge ' +
+                    (${event.status.name() == 'OPEN'}      ? 'badge-green' :
+                    (${event.status.name() == 'LOCKED'}    ? 'badge-blue'  :
+                    (${event.status.name() == 'CANCELLED'} ? 'badge-red'   : 'badge-gray')))"
+                      th:text="${#strings.capitalize(#strings.toLowerCase(event.status))}">
+                </span>
+                <span th:if="${event.notes}" th:text="'Notes: ' + ${event.notes}" style="color:#555; font-size:0.88rem;"></span>
+            </div>
 
-        <p th:if="${event.assignedDriverName != null}" style="margin:0.5rem 0;">
-            Currently assigned: <strong th:text="${event.assignedDriverName}"></strong>
-        </p>
-        <p th:unless="${event.assignedDriverName != null}" style="margin:0.5rem 0; color:#c0392b;">
-            No driver assigned yet.
-        </p>
-
-        <form th:action="@{/manager/event/{id}/assign-driver(id=${event.id})}"
-              th:object="${assignForm}"
-              method="post"
-              style="display:flex; gap:0.5rem; align-items:center; margin-top:0.75rem;">
-
-            <select th:field="*{driverId}" style="padding:0.4rem 0.6rem;">
-                <option value="">— Select driver —</option>
-                <option th:each="driver : ${eligibleDrivers}"
-                        th:value="${driver.id}"
-                        th:text="${driver.fullName} + ' (' + ${driver.phoneNumber} + ')'">
-                </option>
-            </select>
-            <button type="submit" class="btn btn-small btn-primary">Assign</button>
-        </form>
-    </div>
-
-    <!-- Passenger List -->
-    <section>
-        <h3 style="margin-bottom:0.75rem;">
-            Passenger List
-            <span style="font-weight:400; font-size:0.9rem; color:#666;"
-                  th:text="'(' + ${#lists.size(event.passengers)} + ' active requests)'"></span>
-        </h3>
-
-        <div th:if="${#lists.isEmpty(event.passengers)}" class="empty-state">
-            No transport requests submitted for this event yet.
+            <!-- Change Status -->
+            <form th:action="@{/manager/event/{id}/status(id=${event.id})}" method="post"
+                  style="margin-top:1rem; display:flex; gap:0.5rem; align-items:center;">
+                <select name="status" class="form-group" style="margin:0; width:auto; padding:0.4rem 0.6rem;">
+                    <option th:each="s : ${statuses}"
+                            th:value="${s}"
+                            th:text="${#strings.capitalize(#strings.toLowerCase(s))}"
+                            th:selected="${s == event.status}">
+                    </option>
+                </select>
+                <button type="submit" class="btn btn-small btn-secondary">Update Status</button>
+            </form>
         </div>
 
-        <table th:unless="${#lists.isEmpty(event.passengers)}" class="table">
-            <thead>
-                <tr>
-                    <th>#</th>
-                    <th>Name</th>
-                    <th>Phone</th>
-                    <th>Address</th>
-                    <th>Direction</th>
-                    <th>Status</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr th:each="p, iter : ${event.passengers}">
-                    <td th:text="${iter.count}"></td>
-                    <td th:text="${p.fullName}"></td>
-                    <td th:text="${p.phoneNumber}"></td>
-                    <td th:text="${p.addressText != null ? p.addressText : '—'}"></td>
-                    <td th:text="${#strings.capitalize(#strings.toLowerCase(p.direction))}"></td>
-                    <td>
-                        <span th:class="'badge ' + (${p.status.name() == 'APPROVED'} ? 'badge-green' : 'badge-gray')"
-                              th:text="${#strings.capitalize(#strings.toLowerCase(p.status))}">
-                        </span>
-                    </td>
-                </tr>
-            </tbody>
-        </table>
-    </section>
+        <!-- Assign Driver -->
+        <div class="form-card" style="margin-bottom:1.5rem;">
+            <h3>Driver Assignment</h3>
 
-</main>
+            <p th:if="${event.assignedDriverName != null}" style="margin:0.5rem 0;">
+                Currently assigned: <strong th:text="${event.assignedDriverName}"></strong>
+            </p>
+            <p th:unless="${event.assignedDriverName != null}" style="margin:0.5rem 0; color:#c0392b;">
+                No driver assigned yet.
+            </p>
+
+            <form th:action="@{/manager/event/{id}/assign-driver(id=${event.id})}"
+                  th:object="${assignForm}"
+                  method="post"
+                  style="display:flex; gap:0.5rem; align-items:center; margin-top:0.75rem;">
+
+                <select th:field="*{driverId}" style="padding:0.4rem 0.6rem;">
+                    <option value="">— Select driver —</option>
+                    <option th:each="driver : ${eligibleDrivers}"
+                            th:value="${driver.id}"
+                            th:text="${driver.fullName} + ' (' + ${driver.phoneNumber} + ')'">
+                    </option>
+                </select>
+                <button type="submit" class="btn btn-small btn-primary">Assign</button>
+            </form>
+        </div>
+
+        <!-- Passenger List -->
+        <section>
+            <h3 style="margin-bottom:0.75rem;">
+                Passenger List
+                <span style="font-weight:400; font-size:0.9rem; color:#666;"
+                      th:text="'(' + ${#lists.size(event.passengers)} + ' active requests)'"></span>
+            </h3>
+
+            <div th:if="${#lists.isEmpty(event.passengers)}" class="empty-state">
+                No transport requests submitted for this event yet.
+            </div>
+
+            <table th:unless="${#lists.isEmpty(event.passengers)}" class="table">
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Name</th>
+                        <th>Phone</th>
+                        <th>Address</th>
+                        <th>Direction</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:each="p, iter : ${event.passengers}">
+                        <td th:text="${iter.count}"></td>
+                        <td th:text="${p.fullName}"></td>
+                        <td th:text="${p.phoneNumber}"></td>
+                        <td th:text="${p.addressText != null ? p.addressText : '—'}"></td>
+                        <td th:text="${#strings.capitalize(#strings.toLowerCase(p.direction))}"></td>
+                        <td>
+                            <span th:class="'badge ' + (${p.status.name() == 'APPROVED'} ? 'badge-green' : 'badge-gray')"
+                                  th:text="${#strings.capitalize(#strings.toLowerCase(p.status))}">
+                            </span>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+
+    </main>
+</div>
 
 </body>
 </html>

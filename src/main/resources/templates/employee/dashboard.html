@@ -9,99 +9,99 @@
 
 <nav class="navbar">
     <span class="navbar-title">Shift Transport System</span>
-    <div style="display:flex; align-items:center; gap:1rem;">
-        <a th:href="@{/employee/profile}" class="btn btn-small btn-secondary">My Profile</a>
-        <span class="navbar-user" th:text="'Hello, ' + ${session.userName}"></span>
-        <a th:href="@{/auth/logout}" class="btn btn-small">Logout</a>
-    </div>
+    <span class="navbar-user" th:text="'Hello, ' + ${session.userName}"></span>
 </nav>
 
-<main class="container">
+<div class="app-layout">
+    <aside th:replace="~{fragments/nav :: sidebar}"></aside>
 
-    <div th:if="${successMessage}" class="alert alert-success" th:text="${successMessage}"></div>
-    <div th:if="${errorMessage}" class="alert alert-error" th:text="${errorMessage}"></div>
+    <main class="main-content">
 
-    <!-- Open Transport Events -->
-    <section>
-        <h2>Upcoming Transport Events</h2>
+        <div th:if="${successMessage}" class="alert alert-success" th:text="${successMessage}"></div>
+        <div th:if="${errorMessage}" class="alert alert-error" th:text="${errorMessage}"></div>
 
-        <div th:if="${#lists.isEmpty(openEvents)}" class="empty-state">
-            No open transport events at this time.
-        </div>
+        <!-- Open Transport Events -->
+        <section>
+            <h2>Upcoming Transport Events</h2>
 
-        <table th:unless="${#lists.isEmpty(openEvents)}" class="table">
-            <thead>
-                <tr>
-                    <th>Date</th>
-                    <th>Shift</th>
-                    <th>Hours</th>
-                    <th>Requests</th>
-                    <th>Driver</th>
-                    <th>Action</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr th:each="event : ${openEvents}">
-                    <td th:text="${#temporals.format(event.eventDate, 'dd/MM/yyyy')}"></td>
-                    <td th:text="${#strings.capitalize(#strings.toLowerCase(event.shiftName))}"></td>
-                    <td th:text="${event.shiftHours}"></td>
-                    <td th:text="${event.requestCount}"></td>
-                    <td>
-                        <span th:if="${event.hasDriver}" class="badge badge-green">Assigned</span>
-                        <span th:unless="${event.hasDriver}" class="badge badge-gray">Pending</span>
-                    </td>
-                    <td>
-                        <span th:if="${event.currentUserRequested}" class="badge badge-blue">Requested</span>
-                        <a th:unless="${event.currentUserRequested}"
-                           th:href="@{/employee/request/new(eventId=${event.id})}"
-                           class="btn btn-small btn-primary">Request</a>
-                    </td>
-                </tr>
-            </tbody>
-        </table>
-    </section>
+            <div th:if="${#lists.isEmpty(openEvents)}" class="empty-state">
+                No open transport events at this time.
+            </div>
 
-    <!-- My Requests -->
-    <section style="margin-top: 2rem;">
-        <h2>My Transport Requests</h2>
+            <table th:unless="${#lists.isEmpty(openEvents)}" class="table">
+                <thead>
+                    <tr>
+                        <th>Date</th>
+                        <th>Shift</th>
+                        <th>Hours</th>
+                        <th>Requests</th>
+                        <th>Driver</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:each="event : ${openEvents}">
+                        <td th:text="${#temporals.format(event.eventDate, 'dd/MM/yyyy')}"></td>
+                        <td th:text="${#strings.capitalize(#strings.toLowerCase(event.shiftName))}"></td>
+                        <td th:text="${event.shiftHours}"></td>
+                        <td th:text="${event.requestCount}"></td>
+                        <td>
+                            <span th:if="${event.hasDriver}" class="badge badge-green">Assigned</span>
+                            <span th:unless="${event.hasDriver}" class="badge badge-gray">Pending</span>
+                        </td>
+                        <td>
+                            <span th:if="${event.currentUserRequested}" class="badge badge-blue">Requested</span>
+                            <a th:unless="${event.currentUserRequested}"
+                               th:href="@{/employee/request/new(eventId=${event.id})}"
+                               class="btn btn-small btn-primary">Request</a>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
 
-        <div th:if="${#lists.isEmpty(myRequests)}" class="empty-state">
-            You have no transport requests yet.
-        </div>
+        <!-- My Requests -->
+        <section style="margin-top: 2rem;">
+            <h2>My Transport Requests</h2>
 
-        <table th:unless="${#lists.isEmpty(myRequests)}" class="table">
-            <thead>
-                <tr>
-                    <th>Date</th>
-                    <th>Shift</th>
-                    <th>Direction</th>
-                    <th>Status</th>
-                    <th>Action</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr th:each="req : ${myRequests}">
-                    <td th:text="${#temporals.format(req.eventDate, 'dd/MM/yyyy')}"></td>
-                    <td th:text="${#strings.capitalize(#strings.toLowerCase(req.shiftName))}"></td>
-                    <td th:text="${#strings.capitalize(#strings.toLowerCase(req.direction))}"></td>
-                    <td>
-                        <span th:class="'badge ' + (${req.status.name() == 'CANCELLED'} ? 'badge-red' : (${req.status.name() == 'APPROVED'} ? 'badge-green' : 'badge-gray'))"
-                              th:text="${#strings.capitalize(#strings.toLowerCase(req.status))}"></span>
-                    </td>
-                    <td>
-                        <form th:if="${req.status.name() != 'CANCELLED'}"
-                              th:action="@{/employee/request/{id}/cancel(id=${req.id})}"
-                              method="post"
-                              onsubmit="return confirm('Cancel this request?')">
-                            <button type="submit" class="btn btn-small btn-danger">Cancel</button>
-                        </form>
-                    </td>
-                </tr>
-            </tbody>
-        </table>
-    </section>
+            <div th:if="${#lists.isEmpty(myRequests)}" class="empty-state">
+                You have no transport requests yet.
+            </div>
 
-</main>
+            <table th:unless="${#lists.isEmpty(myRequests)}" class="table">
+                <thead>
+                    <tr>
+                        <th>Date</th>
+                        <th>Shift</th>
+                        <th>Direction</th>
+                        <th>Status</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:each="req : ${myRequests}">
+                        <td th:text="${#temporals.format(req.eventDate, 'dd/MM/yyyy')}"></td>
+                        <td th:text="${#strings.capitalize(#strings.toLowerCase(req.shiftName))}"></td>
+                        <td th:text="${#strings.capitalize(#strings.toLowerCase(req.direction))}"></td>
+                        <td>
+                            <span th:class="'badge ' + (${req.status.name() == 'CANCELLED'} ? 'badge-red' : (${req.status.name() == 'APPROVED'} ? 'badge-green' : 'badge-gray'))"
+                                  th:text="${#strings.capitalize(#strings.toLowerCase(req.status))}"></span>
+                        </td>
+                        <td>
+                            <form th:if="${req.status.name() != 'CANCELLED'}"
+                                  th:action="@{/employee/request/{id}/cancel(id=${req.id})}"
+                                  method="post"
+                                  onsubmit="return confirm('Cancel this request?')">
+                                <button type="submit" class="btn btn-small btn-danger">Cancel</button>
+                            </form>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+
+    </main>
+</div>
 
 </body>
 </html>

@@ -45,112 +45,112 @@
 
 <nav class="navbar">
     <span class="navbar-title">Shift Transport System</span>
-    <div style="display:flex; align-items:center; gap:1rem;">
-        <a th:href="@{/employee/dashboard}" class="btn btn-small btn-secondary">← Dashboard</a>
-        <span class="navbar-user" th:text="'Hello, ' + ${session.userName}"></span>
-        <a th:href="@{/auth/logout}" class="btn btn-small">Logout</a>
-    </div>
+    <span class="navbar-user" th:text="'Hello, ' + ${session.userName}"></span>
 </nav>
 
-<main class="container">
+<div class="app-layout">
+    <aside th:replace="~{fragments/nav :: sidebar}"></aside>
 
-    <div th:if="${successMessage}" class="alert alert-success" th:text="${successMessage}"></div>
-    <div th:if="${errorMessage}" class="alert alert-error" th:text="${errorMessage}"></div>
+    <main class="main-content">
 
-    <h2 style="margin-bottom:1.5rem;">My profile</h2>
+        <div th:if="${successMessage}" class="alert alert-success" th:text="${successMessage}"></div>
+        <div th:if="${errorMessage}" class="alert alert-error" th:text="${errorMessage}"></div>
 
-    <!-- Read-only account details -->
-    <div class="form-card" style="margin-bottom:1.5rem;">
-        <h3 style="margin-bottom:1rem; font-size:0.95rem; color:#555; font-weight:600; text-transform:uppercase; letter-spacing:0.05em;">Account details</h3>
+        <h2 style="margin-bottom:1.5rem;">My profile</h2>
 
-        <div style="display:grid; grid-template-columns:1fr 1fr; gap:1rem;">
-            <div>
-                <label style="font-size:0.82rem; color:#888; display:block; margin-bottom:0.2rem;">Full name</label>
-                <p style="margin:0; font-weight:500;" th:text="${user.fullName}"></p>
+        <!-- Read-only account details -->
+        <div class="form-card" style="margin-bottom:1.5rem;">
+            <h3 style="margin-bottom:1rem; font-size:0.95rem; color:#555; font-weight:600; text-transform:uppercase; letter-spacing:0.05em;">Account details</h3>
+
+            <div style="display:grid; grid-template-columns:1fr 1fr; gap:1rem;">
+                <div>
+                    <label style="font-size:0.82rem; color:#888; display:block; margin-bottom:0.2rem;">Full name</label>
+                    <p style="margin:0; font-weight:500;" th:text="${user.fullName}"></p>
+                </div>
+                <div>
+                    <label style="font-size:0.82rem; color:#888; display:block; margin-bottom:0.2rem;">Phone number</label>
+                    <p style="margin:0; font-weight:500;" th:text="${user.phoneNumber}"></p>
+                </div>
             </div>
-            <div>
-                <label style="font-size:0.82rem; color:#888; display:block; margin-bottom:0.2rem;">Phone number</label>
-                <p style="margin:0; font-weight:500;" th:text="${user.phoneNumber}"></p>
-            </div>
+
+            <p th:unless="${isAdmin}" style="margin-top:0.75rem; font-size:0.8rem; color:#aaa;">
+                Name and phone number can only be changed by a system administrator.
+            </p>
+            <p th:if="${isAdmin}" style="margin-top:0.75rem; font-size:0.8rem; color:#2980b9;">
+                As system administrator, you can edit your name below.
+            </p>
         </div>
 
-        <p th:unless="${isAdmin}" style="margin-top:0.75rem; font-size:0.8rem; color:#aaa;">
-            Name and phone number can only be changed by a system administrator.
-        </p>
-        <p th:if="${isAdmin}" style="margin-top:0.75rem; font-size:0.8rem; color:#2980b9;">
-            As system administrator, you can edit your name below.
-        </p>
-    </div>
+        <!-- Editable fields -->
+        <div class="form-card">
+            <h3 style="margin-bottom:1rem; font-size:0.95rem; color:#555; font-weight:600; text-transform:uppercase; letter-spacing:0.05em;">Update information</h3>
 
-    <!-- Editable fields -->
-    <div class="form-card">
-        <h3 style="margin-bottom:1rem; font-size:0.95rem; color:#555; font-weight:600; text-transform:uppercase; letter-spacing:0.05em;">Update information</h3>
+            <form th:action="@{/employee/profile}" method="post" th:object="${form}">
 
-        <form th:action="@{/employee/profile}" method="post" th:object="${form}">
-
-            <!-- Full name — admin only -->
-            <div th:if="${isAdmin}" class="form-group">
-                <label for="fullName" class="form-label">
-                    Full name
-                    <span class="required-star">*</span>
-                    <span style="font-size:0.78rem; color:#2980b9; font-weight:400;">(admin)</span>
-                </label>
-                <input type="text"
-                       id="fullName"
-                       class="form-control"
-                       th:field="*{fullName}"
-                       placeholder="Full name"
-                       maxlength="100">
-                <div th:if="${#fields.hasErrors('fullName')}" class="field-error" th:errors="*{fullName}"></div>
-            </div>
-
-            <!-- Address — required for all -->
-            <div class="form-group">
-                <label for="addressText" class="form-label">
-                    Home address
-                    <span class="required-star">*</span>
-                </label>
-                <div class="address-wrapper">
+                <!-- Full name — admin only -->
+                <div th:if="${isAdmin}" class="form-group">
+                    <label for="fullName" class="form-label">
+                        Full name
+                        <span class="required-star">*</span>
+                        <span style="font-size:0.78rem; color:#2980b9; font-weight:400;">(admin)</span>
+                    </label>
                     <input type="text"
-                           id="addressText"
+                           id="fullName"
                            class="form-control"
-                           th:field="*{addressText}"
-                           placeholder="Start typing your address..."
-                           maxlength="300"
-                           autocomplete="off">
-                    <ul class="address-suggestions" id="address-suggestions"></ul>
+                           th:field="*{fullName}"
+                           placeholder="Full name"
+                           maxlength="100">
+                    <div th:if="${#fields.hasErrors('fullName')}" class="field-error" th:errors="*{fullName}"></div>
                 </div>
-                <div th:if="${#fields.hasErrors('addressText')}" class="field-error" th:errors="*{addressText}"></div>
-                <p class="address-hint">
-                    Start typing to search for a real address. Select a result from the list to confirm.
-                    Powered by <a href="https://www.openstreetmap.org" target="_blank" style="color:#888;">OpenStreetMap</a>.
-                </p>
-            </div>
 
-            <!-- Email — optional -->
-            <div class="form-group">
-                <label for="email" class="form-label">
-                    Email address
-                    <span style="color:#aaa; font-weight:400;">(optional)</span>
-                </label>
-                <input type="email"
-                       id="email"
-                       class="form-control"
-                       th:field="*{email}"
-                       placeholder="e.g. yourname@example.com"
-                       maxlength="150">
-                <div th:if="${#fields.hasErrors('email')}" class="field-error" th:errors="*{email}"></div>
-            </div>
+                <!-- Address — required for all -->
+                <div class="form-group">
+                    <label for="addressText" class="form-label">
+                        Home address
+                        <span class="required-star">*</span>
+                    </label>
+                    <div class="address-wrapper">
+                        <input type="text"
+                               id="addressText"
+                               class="form-control"
+                               th:field="*{addressText}"
+                               placeholder="Start typing your address..."
+                               maxlength="300"
+                               autocomplete="off">
+                        <ul class="address-suggestions" id="address-suggestions"></ul>
+                    </div>
+                    <div th:if="${#fields.hasErrors('addressText')}" class="field-error" th:errors="*{addressText}"></div>
+                    <p class="address-hint">
+                        Start typing to search for a real address. Select a result from the list to confirm.
+                        Powered by <a href="https://www.openstreetmap.org" target="_blank" style="color:#888;">OpenStreetMap</a>.
+                    </p>
+                </div>
 
-            <div style="display:flex; gap:0.75rem; margin-top:1.25rem;">
-                <button type="submit" class="btn btn-primary">Save changes</button>
-                <a th:href="@{/employee/dashboard}" class="btn btn-secondary">Cancel</a>
-            </div>
+                <!-- Email — optional -->
+                <div class="form-group">
+                    <label for="email" class="form-label">
+                        Email address
+                        <span style="color:#aaa; font-weight:400;">(optional)</span>
+                    </label>
+                    <input type="email"
+                           id="email"
+                           class="form-control"
+                           th:field="*{email}"
+                           placeholder="e.g. yourname@example.com"
+                           maxlength="150">
+                    <div th:if="${#fields.hasErrors('email')}" class="field-error" th:errors="*{email}"></div>
+                </div>
 
-        </form>
-    </div>
+                <div style="display:flex; gap:0.75rem; margin-top:1.25rem;">
+                    <button type="submit" class="btn btn-primary">Save changes</button>
+                    <a th:href="@{/employee/dashboard}" class="btn btn-secondary">Cancel</a>
+                </div>
 
-</main>
+            </form>
+        </div>
+
+    </main>
+</div>
 
 <script>
 (function () {

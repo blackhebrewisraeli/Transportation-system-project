@@ -55,6 +55,7 @@ public class AuthController {
         session.setAttribute("isManager", user.isShiftManager() || user.isSystemAdmin());
         session.setAttribute("isSystemAdmin", user.isSystemAdmin());
         session.setAttribute("isDriver", user.isCanDrive());
+        session.setAttribute("canRequestTransport", user.isCanRequestTransport());
 
         // Route to appropriate dashboard
         if (user.isShiftManager() || user.isSystemAdmin()) {

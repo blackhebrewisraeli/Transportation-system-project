@@ -8,59 +8,62 @@
 <body>
 
 <nav class="navbar">
-    <span class="navbar-title">Shift Transport System — Manager</span>
+    <span class="navbar-title">Shift Transport System</span>
     <span class="navbar-user" th:text="'Hello, ' + ${session.userName}"></span>
-    <a th:href="@{/auth/logout}" class="btn btn-small">Logout</a>
 </nav>
 
-<main class="container">
+<div class="app-layout">
+    <aside th:replace="~{fragments/nav :: sidebar}"></aside>
 
-    <div style="margin-bottom:1rem;">
-        <a th:href="@{/manager/dashboard}" class="btn btn-secondary btn-small">← Back</a>
-    </div>
+    <main class="main-content">
 
-    <h2>Create Transport Event</h2>
-
-    <form th:action="@{/manager/event/new}"
-          th:object="${form}"
-          method="post"
-          class="form-card"
-          style="margin-top:1rem;">
-
-        <!-- Date -->
-        <div class="form-group">
-            <label for="eventDate">Date</label>
-            <input type="date" id="eventDate" th:field="*{eventDate}">
-            <span class="field-error" th:if="${#fields.hasErrors('eventDate')}" th:errors="*{eventDate}"></span>
+        <div style="margin-bottom:1rem;">
+            <a th:href="@{/manager/dashboard}" class="btn btn-secondary btn-small">← Back</a>
         </div>
 
-        <!-- Shift Type -->
-        <div class="form-group">
-            <label for="shiftTypeId">Shift</label>
-            <select id="shiftTypeId" th:field="*{shiftTypeId}">
-                <option value="">— Select shift —</option>
-                <option th:each="shift : ${shiftTypes}"
-                        th:value="${shift.id}"
-                        th:text="${shift.name} + ' (' + ${shift.startTime} + '-' + ${shift.endTime} + ')'">
-                </option>
-            </select>
-            <span class="field-error" th:if="${#fields.hasErrors('shiftTypeId')}" th:errors="*{shiftTypeId}"></span>
-        </div>
+        <h2>Create Transport Event</h2>
 
-        <!-- Notes -->
-        <div class="form-group">
-            <label for="notes">Notes (optional)</label>
-            <input type="text" id="notes" th:field="*{notes}" placeholder="e.g. Holiday shift, extra seats needed">
-        </div>
+        <form th:action="@{/manager/event/new}"
+              th:object="${form}"
+              method="post"
+              class="form-card"
+              style="margin-top:1rem;">
 
-        <div class="form-actions">
-            <a th:href="@{/manager/dashboard}" class="btn btn-secondary">Cancel</a>
-            <button type="submit" class="btn btn-primary">Create Event</button>
-        </div>
+            <!-- Date -->
+            <div class="form-group">
+                <label for="eventDate">Date</label>
+                <input type="date" id="eventDate" th:field="*{eventDate}">
+                <span class="field-error" th:if="${#fields.hasErrors('eventDate')}" th:errors="*{eventDate}"></span>
+            </div>
 
-    </form>
+            <!-- Shift Type -->
+            <div class="form-group">
+                <label for="shiftTypeId">Shift</label>
+                <select id="shiftTypeId" th:field="*{shiftTypeId}">
+                    <option value="">— Select shift —</option>
+                    <option th:each="shift : ${shiftTypes}"
+                            th:value="${shift.id}"
+                            th:text="${shift.name} + ' (' + ${shift.startTime} + '-' + ${shift.endTime} + ')'">
+                    </option>
+                </select>
+                <span class="field-error" th:if="${#fields.hasErrors('shiftTypeId')}" th:errors="*{shiftTypeId}"></span>
+            </div>
 
-</main>
+            <!-- Notes -->
+            <div class="form-group">
+                <label for="notes">Notes (optional)</label>
+                <input type="text" id="notes" th:field="*{notes}" placeholder="e.g. Holiday shift, extra seats needed">
+            </div>
+
+            <div class="form-actions">
+                <a th:href="@{/manager/dashboard}" class="btn btn-secondary">Cancel</a>
+                <button type="submit" class="btn btn-primary">Create Event</button>
+            </div>
+
+        </form>
+
+    </main>
+</div>
 
 </body>
 </html>

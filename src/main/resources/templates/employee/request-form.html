@@ -10,43 +10,46 @@
 <nav class="navbar">
     <span class="navbar-title">Shift Transport System</span>
     <span class="navbar-user" th:text="'Hello, ' + ${session.userName}"></span>
-    <a th:href="@{/auth/logout}" class="btn btn-small">Logout</a>
 </nav>
 
-<main class="container">
+<div class="app-layout">
+    <aside th:replace="~{fragments/nav :: sidebar}"></aside>
 
-    <h2>Request Transport</h2>
+    <main class="main-content">
 
-    <div th:if="${errorMessage}" class="alert alert-error" th:text="${errorMessage}"></div>
+        <h2>Request Transport</h2>
 
-    <form th:action="@{/employee/request/new}" th:object="${form}" method="post" class="form-card">
+        <div th:if="${errorMessage}" class="alert alert-error" th:text="${errorMessage}"></div>
 
-        <!-- Hidden: event ID -->
-        <input type="hidden" th:field="*{transportEventId}">
+        <form th:action="@{/employee/request/new}" th:object="${form}" method="post" class="form-card">
 
-        <!-- Direction -->
-        <div class="form-group">
-            <label>Transport Direction</label>
-            <div class="radio-group">
-                <label th:each="dir : ${directions}">
-                    <input type="radio"
-                           th:field="*{direction}"
-                           th:value="${dir}"
-                           th:text="${#strings.capitalize(#strings.toLowerCase(dir))}">
-                </label>
+            <!-- Hidden: event ID -->
+            <input type="hidden" th:field="*{transportEventId}">
+
+            <!-- Direction -->
+            <div class="form-group">
+                <label>Transport Direction</label>
+                <div class="radio-group">
+                    <label th:each="dir : ${directions}">
+                        <input type="radio"
+                               th:field="*{direction}"
+                               th:value="${dir}"
+                               th:text="${#strings.capitalize(#strings.toLowerCase(dir))}">
+                    </label>
+                </div>
+                <span class="field-error" th:if="${#fields.hasErrors('direction')}"
+                      th:errors="*{direction}"></span>
             </div>
-            <span class="field-error" th:if="${#fields.hasErrors('direction')}"
-                  th:errors="*{direction}"></span>
-        </div>
 
-        <div class="form-actions">
-            <a th:href="@{/employee/dashboard}" class="btn btn-secondary">Back</a>
-            <button type="submit" class="btn btn-primary">Submit Request</button>
-        </div>
+            <div class="form-actions">
+                <a th:href="@{/employee/dashboard}" class="btn btn-secondary">Back</a>
+                <button type="submit" class="btn btn-primary">Submit Request</button>
+            </div>
 
-    </form>
+        </form>
 
-</main>
+    </main>
+</div>
 
 </body>
 </html>

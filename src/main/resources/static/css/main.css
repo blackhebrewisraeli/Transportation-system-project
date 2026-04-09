@@ -242,3 +242,94 @@ section h2 {
     font-size: 0.9rem;
     padding: 1rem 0;
 }
+
+/* ── Sidebar Layout ── */
+
+.app-layout {
+    display: flex;
+    min-height: calc(100vh - 48px);
+}
+
+.sidebar {
+    width: 220px;
+    min-width: 220px;
+    background: #fff;
+    border-right: 1px solid #e5e7eb;
+    padding: 1.25rem 0;
+    display: flex;
+    flex-direction: column;
+}
+
+.sidebar-section-title {
+    font-size: 0.68rem;
+    font-weight: 700;
+    color: #bbb;
+    text-transform: uppercase;
+    letter-spacing: 0.09em;
+    padding: 0 1rem;
+    margin-bottom: 0.3rem;
+    margin-top: 0.1rem;
+}
+
+.sidebar-section {
+    padding: 0 0.6rem;
+    margin-bottom: 0.5rem;
+}
+
+.sidebar-link {
+    display: flex;
+    align-items: center;
+    gap: 0.55rem;
+    padding: 0.48rem 0.75rem;
+    border-radius: 6px;
+    color: #444;
+    text-decoration: none;
+    font-size: 0.875rem;
+    font-weight: 500;
+    transition: background 0.12s, color 0.12s;
+    margin-bottom: 0.05rem;
+    white-space: nowrap;
+}
+
+.sidebar-link:hover {
+    background: #f0f4ff;
+    color: #1e3a5f;
+}
+
+.sidebar-link.active {
+    background: #e8eef8;
+    color: #1e3a5f;
+    font-weight: 600;
+}
+
+.sidebar-divider {
+    border: none;
+    border-top: 1px solid #f0f0f0;
+    margin: 0.6rem 0.6rem;
+}
+
+.sidebar-spacer {
+    flex: 1;
+}
+
+.sidebar-link.signout {
+    color: #c0392b;
+    margin-top: 0.1rem;
+}
+
+.sidebar-link.signout:hover {
+    background: #fdf0f0;
+    color: #922b21;
+}
+
+.main-content {
+    flex: 1;
+    padding: 2rem 2.5rem;
+    min-width: 0;
+}
+
+/* ── Simplified Navbar (sidebar layout) ── */
+
+.navbar {
+    justify-content: space-between;
+}

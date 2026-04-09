@@ -8,78 +8,81 @@
 <body>
 
 <nav class="navbar">
-    <span class="navbar-title">Shift Transport System — Driver</span>
+    <span class="navbar-title">Shift Transport System</span>
     <span class="navbar-user" th:text="'Hello, ' + ${session.userName}"></span>
-    <a th:href="@{/auth/logout}" class="btn btn-small">Logout</a>
 </nav>
 
-<main class="container">
+<div class="app-layout">
+    <aside th:replace="~{fragments/nav :: sidebar}"></aside>
 
-    <div style="margin-bottom:1rem;">
-        <a th:href="@{/driver/dashboard}" class="btn btn-secondary btn-small">← Back</a>
-    </div>
+    <main class="main-content">
 
-    <!-- Event header -->
-    <div class="form-card" style="margin-bottom:1.5rem;">
-        <h2 th:text="${#temporals.format(event.eventDate, 'EEEE, dd/MM/yyyy')} + ' — ' + ${event.shiftName}"></h2>
-        <p style="color:#666; margin-top:0.3rem;" th:text="${event.shiftHours}"></p>
-        <span th:class="'badge ' +
-            (${event.status.name() == 'OPEN'}   ? 'badge-green' :
-            (${event.status.name() == 'LOCKED'} ? 'badge-blue'  : 'badge-gray'))"
-              th:text="${event.status}"
-              style="margin-top:0.6rem; display:inline-block;">
-        </span>
-        <p th:if="${event.notes}" style="margin-top:0.5rem; font-size:0.88rem; color:#555;"
-           th:text="'Notes: ' + ${event.notes}"></p>
-    </div>
-
-    <!-- Passenger list -->
-    <section>
-        <h3 style="margin-bottom:0.75rem;">
-            Passengers
-            <span style="font-weight:400; font-size:0.9rem; color:#666;"
-                  th:text="'(' + ${#lists.size(event.passengers)} + ')'"></span>
-        </h3>
-
-        <div th:if="${#lists.isEmpty(event.passengers)}" class="empty-state">
-            No passengers on this trip.
+        <div style="margin-bottom:1rem;">
+            <a th:href="@{/driver/dashboard}" class="btn btn-secondary btn-small">← Back</a>
         </div>
 
-        <table th:unless="${#lists.isEmpty(event.passengers)}" class="table">
-            <thead>
-                <tr>
-                    <th>#</th>
-                    <th>Name</th>
-                    <th>Phone</th>
-                    <th>Address</th>
-                    <th>Direction</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr th:each="p, iter : ${event.passengers}">
-                    <td th:text="${iter.count}"></td>
-                    <td th:text="${p.fullName}"></td>
-                    <td>
-                        <!-- Clickable phone number for easy calling on mobile -->
-                        <a th:href="'tel:' + ${p.phoneNumber}"
-                           th:text="${p.phoneNumber}"
-                           style="text-decoration:none; color:inherit;">
-                        </a>
-                    </td>
-                    <td th:text="${p.addressText != null ? p.addressText : '—'}"></td>
-                    <td>
-                        <span th:class="'badge ' +
-                            (${p.direction.name() == 'PICKUP'}  ? 'badge-blue' :
-                            (${p.direction.name() == 'DROPOFF'} ? 'badge-gray' : 'badge-green'))"
-                              th:text="${#strings.capitalize(#strings.toLowerCase(p.direction))}">
-                        </span>
-                    </td>
-                </tr>
-            </tbody>
-        </table>
-    </section>
+        <!-- Event header -->
+        <div class="form-card" style="margin-bottom:1.5rem;">
+            <h2 th:text="${#temporals.format(event.eventDate, 'EEEE, dd/MM/yyyy')} + ' — ' + ${event.shiftName}"></h2>
+            <p style="color:#666; margin-top:0.3rem;" th:text="${event.shiftHours}"></p>
+            <span th:class="'badge ' +
+                (${event.status.name() == 'OPEN'}   ? 'badge-green' :
+                (${event.status.name() == 'LOCKED'} ? 'badge-blue'  : 'badge-gray'))"
+                  th:text="${event.status}"
+                  style="margin-top:0.6rem; display:inline-block;">
+            </span>
+            <p th:if="${event.notes}" style="margin-top:0.5rem; font-size:0.88rem; color:#555;"
+               th:text="'Notes: ' + ${event.notes}"></p>
+        </div>
 
-</main>
+        <!-- Passenger list -->
+        <section>
+            <h3 style="margin-bottom:0.75rem;">
+                Passengers
+                <span style="font-weight:400; font-size:0.9rem; color:#666;"
+                      th:text="'(' + ${#lists.size(event.passengers)} + ')'"></span>
+            </h3>
+
+            <div th:if="${#lists.isEmpty(event.passengers)}" class="empty-state">
+                No passengers on this trip.
+            </div>
+
+            <table th:unless="${#lists.isEmpty(event.passengers)}" class="table">
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Name</th>
+                        <th>Phone</th>
+                        <th>Address</th>
+                        <th>Direction</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:each="p, iter : ${event.passengers}">
+                        <td th:text="${iter.count}"></td>
+                        <td th:text="${p.fullName}"></td>
+                        <td>
+                            <!-- Clickable phone number for easy calling on mobile -->
+                            <a th:href="'tel:' + ${p.phoneNumber}"
+                               th:text="${p.phoneNumber}"
+                               style="text-decoration:none; color:inherit;">
+                            </a>
+                        </td>
+                        <td th:text="${p.addressText != null ? p.addressText : '—'}"></td>
+                        <td>
+                            <span th:class="'badge ' +
+                                (${p.direction.name() == 'PICKUP'}  ? 'badge-blue' :
+                                (${p.direction.name() == 'DROPOFF'} ? 'badge-gray' : 'badge-green'))"
+                                  th:text="${#strings.capitalize(#strings.toLowerCase(p.direction))}">
+                            </span>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+
+    </main>
+</div>
 
 </body>
 </html>
