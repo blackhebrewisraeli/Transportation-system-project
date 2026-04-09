@@ -8,25 +8,20 @@
     <aside th:replace="~{fragments/nav :: sidebar}"></aside>
 
   Reads from session:
-    - isManager          (boolean)
-    - isSystemAdmin      (boolean)
-    - isDriver           (boolean)
+    - isManager           (boolean)
+    - isSystemAdmin       (boolean)
+    - isDriver            (boolean)
     - canRequestTransport (boolean)
 -->
-<aside th:fragment="sidebar" th:with="path=${#request.servletPath}">
+<aside th:fragment="sidebar">
     <nav class="sidebar">
 
         <!-- ── Operations (Manager / Admin) ── -->
         <div th:if="${session.isManager}">
             <p class="sidebar-section-title">Operations</p>
             <div class="sidebar-section">
-                <a th:href="@{/manager/dashboard}"
-                   th:class="'sidebar-link' + (${#strings.startsWith(path, '/manager/dashboard')} ? ' active' : '')"
-                >📊 Events dashboard</a>
-
-                <a th:href="@{/manager/event/new}"
-                   th:class="'sidebar-link' + (${path == '/manager/event/new'} ? ' active' : '')"
-                >➕ New event</a>
+                <a th:href="@{/manager/dashboard}" class="sidebar-link">📊 Events dashboard</a>
+                <a th:href="@{/manager/event/new}" class="sidebar-link">➕ New event</a>
             </div>
             <hr class="sidebar-divider">
         </div>
@@ -35,9 +30,7 @@
         <div th:if="${session.isDriver}">
             <p class="sidebar-section-title">Driver</p>
             <div class="sidebar-section">
-                <a th:href="@{/driver/dashboard}"
-                   th:class="'sidebar-link' + (${#strings.startsWith(path, '/driver')} ? ' active' : '')"
-                >🚗 My trips</a>
+                <a th:href="@{/driver/dashboard}" class="sidebar-link">🚗 My trips</a>
             </div>
             <hr class="sidebar-divider">
         </div>
@@ -46,9 +39,7 @@
         <div th:if="${session.canRequestTransport}">
             <p class="sidebar-section-title">My transport</p>
             <div class="sidebar-section">
-                <a th:href="@{/employee/dashboard}"
-                   th:class="'sidebar-link' + (${path == '/employee/dashboard'} ? ' active' : '')"
-                >🚌 My requests</a>
+                <a th:href="@{/employee/dashboard}" class="sidebar-link">🚌 My requests</a>
             </div>
             <hr class="sidebar-divider">
         </div>
@@ -59,13 +50,8 @@
         <!-- ── Account (always visible) ── -->
         <p class="sidebar-section-title">Account</p>
         <div class="sidebar-section">
-            <a th:href="@{/employee/profile}"
-               th:class="'sidebar-link' + (${#strings.startsWith(path, '/employee/profile')} ? ' active' : '')"
-            >👤 My profile</a>
-
-            <a th:href="@{/auth/logout}" class="sidebar-link signout">
-                🚪 Sign out
-            </a>
+            <a th:href="@{/employee/profile}" class="sidebar-link">👤 My profile</a>
+            <a th:href="@{/auth/logout}" class="sidebar-link signout">🚪 Sign out</a>
         </div>
 
     </nav>
