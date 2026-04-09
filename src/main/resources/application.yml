@@ -2,16 +2,18 @@ spring:
   application:
     name: shift-transport-system
 
+  # Database — uses environment variables in production (Railway sets these automatically).
+  # Falls back to local development values when running on localhost.
   datasource:
-    url: jdbc:postgresql://localhost:5432/shift_transport
-    username: postgres
-    password: postgres
+    url: jdbc:postgresql://${PGHOST:localhost}:${PGPORT:5432}/${PGDATABASE:shift_transport}
+    username: ${PGUSER:postgres}
+    password: ${PGPASSWORD:postgres}
     driver-class-name: org.postgresql.Driver
 
   jpa:
     hibernate:
       ddl-auto: none
-    show-sql: true
+    show-sql: false
     properties:
       hibernate:
         format_sql: true
@@ -21,7 +23,9 @@ spring:
       mode: always
 
   thymeleaf:
-    cache: false
+    # false locally (live reload), true in production via THYMELEAF_CACHE env var
+    cache: ${THYMELEAF_CACHE:false}
 
+# PORT env var is set automatically by Railway. Falls back to 8080 locally.
 server:
-  port: 8080
+  port: ${PORT:8080}
