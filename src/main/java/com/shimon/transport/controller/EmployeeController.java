@@ -112,13 +112,16 @@ public class EmployeeController {
         if (userId == null) return "redirect:/auth/login";
 
         User user = userService.getById(userId);
+        boolean isAdmin = Boolean.TRUE.equals(session.getAttribute("isSystemAdmin"));
 
         ProfileUpdateFormDto form = new ProfileUpdateFormDto();
+        form.setFullName(user.getFullName());
         form.setAddressText(user.getAddressText());
         form.setEmail(user.getEmail());
 
         model.addAttribute("user", user);
         model.addAttribute("form", form);
+        model.addAttribute("isAdmin", isAdmin);
         return "employee/profile";
     }
 
@@ -135,13 +138,22 @@ public class EmployeeController {
         Long userId = getSessionUserId(session);
         if (userId == null) return "redirect:/auth/login";
 
+        boolean isAdmin = Boolean.TRUE.equals(session.getAttribute("isSystemAdmin"));
+
         if (bindingResult.hasErrors()) {
             User user = userService.getById(userId);
             model.addAttribute("user", user);
+            model.addAttribute("isAdmin", isAdmin);
             return "employee/profile";
         }
 
-        userService.updateProfile(userId, form);
+        userService.updateProfile(userId, form, isAdmin);
+
+        // If admin changed their name, update the session display name
+        if (isAdmin && form.getFullName() != null && !form.getFullName().isBlank()) {
+            session.setAttribute("userName", form.getFullName().trim());
+        }
+
         redirectAttributes.addFlashAttribute("successMessage", "Your profile has been updated.");
         return "redirect:/employee/profile";
     }

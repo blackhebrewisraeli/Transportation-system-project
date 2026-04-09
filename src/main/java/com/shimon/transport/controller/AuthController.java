@@ -53,6 +53,7 @@ public class AuthController {
         session.setAttribute("userId", user.getId());
         session.setAttribute("userName", user.getFullName());
         session.setAttribute("isManager", user.isShiftManager() || user.isSystemAdmin());
+        session.setAttribute("isSystemAdmin", user.isSystemAdmin());
         session.setAttribute("isDriver", user.isCanDrive());
 
         // Route to appropriate dashboard

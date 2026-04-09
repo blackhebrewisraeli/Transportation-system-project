@@ -74,3 +74,12 @@ ON CONFLICT (phone_number) DO NOTHING;
 INSERT INTO users (full_name, phone_number, email, address_text, user_type, can_request_transport, can_drive, is_shift_manager, is_system_admin)
 VALUES ('Tal Golan', '0598888888', NULL, NULL, 'EMPLOYEE', TRUE, FALSE, FALSE, FALSE)
 ON CONFLICT (phone_number) DO NOTHING;
+
+-- ============================================================
+-- Default address for users without an address
+-- "Derech Agudat Beitar, Malha, Jerusalem" (Teddy Stadium)
+-- Run this after the inserts above to fill in any NULL addresses.
+-- ============================================================
+UPDATE users
+SET address_text = 'Derech Agudat Beitar, Malha, Jerusalem'
+WHERE address_text IS NULL OR TRIM(address_text) = '';

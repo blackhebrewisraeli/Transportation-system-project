@@ -4,6 +4,42 @@
     <meta charset="UTF-8">
     <title>My Profile — Shift Transport System</title>
     <link rel="stylesheet" th:href="@{/css/main.css}">
+    <style>
+        .address-wrapper { position: relative; }
+        .address-suggestions {
+            position: absolute;
+            z-index: 1000;
+            background: #fff;
+            border: 1px solid #ddd;
+            border-top: none;
+            border-radius: 0 0 6px 6px;
+            list-style: none;
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            max-height: 220px;
+            overflow-y: auto;
+            box-shadow: 0 6px 16px rgba(0,0,0,0.1);
+            display: none;
+        }
+        .address-suggestions li {
+            padding: 0.6rem 0.75rem;
+            cursor: pointer;
+            font-size: 0.86rem;
+            border-bottom: 1px solid #f0f0f0;
+            color: #333;
+            line-height: 1.4;
+        }
+        .address-suggestions li:last-child { border-bottom: none; }
+        .address-suggestions li:hover { background: #f0f4ff; }
+        .address-validated { border-color: #27ae60 !important; }
+        .address-hint {
+            font-size: 0.78rem;
+            color: #888;
+            margin-top: 0.3rem;
+        }
+        .required-star { color: #e74c3c; margin-left: 2px; }
+    </style>
 </head>
 <body>
 
@@ -21,65 +57,93 @@
     <div th:if="${successMessage}" class="alert alert-success" th:text="${successMessage}"></div>
     <div th:if="${errorMessage}" class="alert alert-error" th:text="${errorMessage}"></div>
 
-    <h2 style="margin-bottom:1.5rem;">My Profile</h2>
+    <h2 style="margin-bottom:1.5rem;">My profile</h2>
 
-    <!-- Read-only info block -->
+    <!-- Read-only account details -->
     <div class="form-card" style="margin-bottom:1.5rem;">
-        <h3 style="margin-bottom:1rem; font-size:1rem; color:#555; font-weight:600; text-transform:uppercase; letter-spacing:0.05em;">Account Details</h3>
+        <h3 style="margin-bottom:1rem; font-size:0.95rem; color:#555; font-weight:600; text-transform:uppercase; letter-spacing:0.05em;">Account details</h3>
 
         <div style="display:grid; grid-template-columns:1fr 1fr; gap:1rem;">
             <div>
-                <label style="font-size:0.82rem; color:#888; display:block; margin-bottom:0.2rem;">Full Name</label>
+                <label style="font-size:0.82rem; color:#888; display:block; margin-bottom:0.2rem;">Full name</label>
                 <p style="margin:0; font-weight:500;" th:text="${user.fullName}"></p>
             </div>
             <div>
-                <label style="font-size:0.82rem; color:#888; display:block; margin-bottom:0.2rem;">Phone Number</label>
+                <label style="font-size:0.82rem; color:#888; display:block; margin-bottom:0.2rem;">Phone number</label>
                 <p style="margin:0; font-weight:500;" th:text="${user.phoneNumber}"></p>
             </div>
         </div>
 
-        <p style="margin-top:0.75rem; font-size:0.8rem; color:#aaa;">
-            Name and phone number can only be changed by an administrator.
+        <p th:unless="${isAdmin}" style="margin-top:0.75rem; font-size:0.8rem; color:#aaa;">
+            Name and phone number can only be changed by a system administrator.
+        </p>
+        <p th:if="${isAdmin}" style="margin-top:0.75rem; font-size:0.8rem; color:#2980b9;">
+            As system administrator, you can edit your name below.
         </p>
     </div>
 
-    <!-- Editable fields form -->
+    <!-- Editable fields -->
     <div class="form-card">
-        <h3 style="margin-bottom:1rem; font-size:1rem; color:#555; font-weight:600; text-transform:uppercase; letter-spacing:0.05em;">Update Information</h3>
+        <h3 style="margin-bottom:1rem; font-size:0.95rem; color:#555; font-weight:600; text-transform:uppercase; letter-spacing:0.05em;">Update information</h3>
 
         <form th:action="@{/employee/profile}" method="post" th:object="${form}">
 
-            <!-- Address -->
-            <div class="form-group">
-                <label for="addressText" class="form-label">Home Address</label>
+            <!-- Full name — admin only -->
+            <div th:if="${isAdmin}" class="form-group">
+                <label for="fullName" class="form-label">
+                    Full name
+                    <span class="required-star">*</span>
+                    <span style="font-size:0.78rem; color:#2980b9; font-weight:400;">(admin)</span>
+                </label>
                 <input type="text"
-                       id="addressText"
+                       id="fullName"
                        class="form-control"
-                       th:field="*{addressText}"
-                       placeholder="e.g. Herzl 10, Tel Aviv"
-                       maxlength="200">
-                <div th:if="${#fields.hasErrors('addressText')}" class="field-error"
-                     th:errors="*{addressText}"></div>
-                <p style="font-size:0.8rem; color:#888; margin-top:0.3rem;">
-                    Used by the driver for pickup and drop-off. Keep this up to date.
+                       th:field="*{fullName}"
+                       placeholder="Full name"
+                       maxlength="100">
+                <div th:if="${#fields.hasErrors('fullName')}" class="field-error" th:errors="*{fullName}"></div>
+            </div>
+
+            <!-- Address — required for all -->
+            <div class="form-group">
+                <label for="addressText" class="form-label">
+                    Home address
+                    <span class="required-star">*</span>
+                </label>
+                <div class="address-wrapper">
+                    <input type="text"
+                           id="addressText"
+                           class="form-control"
+                           th:field="*{addressText}"
+                           placeholder="Start typing your address..."
+                           maxlength="300"
+                           autocomplete="off">
+                    <ul class="address-suggestions" id="address-suggestions"></ul>
+                </div>
+                <div th:if="${#fields.hasErrors('addressText')}" class="field-error" th:errors="*{addressText}"></div>
+                <p class="address-hint">
+                    Start typing to search for a real address. Select a result from the list to confirm.
+                    Powered by <a href="https://www.openstreetmap.org" target="_blank" style="color:#888;">OpenStreetMap</a>.
                 </p>
             </div>
 
-            <!-- Email -->
+            <!-- Email — optional -->
             <div class="form-group">
-                <label for="email" class="form-label">Email Address <span style="color:#aaa; font-weight:400;">(optional)</span></label>
+                <label for="email" class="form-label">
+                    Email address
+                    <span style="color:#aaa; font-weight:400;">(optional)</span>
+                </label>
                 <input type="email"
                        id="email"
                        class="form-control"
                        th:field="*{email}"
                        placeholder="e.g. yourname@example.com"
                        maxlength="150">
-                <div th:if="${#fields.hasErrors('email')}" class="field-error"
-                     th:errors="*{email}"></div>
+                <div th:if="${#fields.hasErrors('email')}" class="field-error" th:errors="*{email}"></div>
             </div>
 
             <div style="display:flex; gap:0.75rem; margin-top:1.25rem;">
-                <button type="submit" class="btn btn-primary">Save Changes</button>
+                <button type="submit" class="btn btn-primary">Save changes</button>
                 <a th:href="@{/employee/dashboard}" class="btn btn-secondary">Cancel</a>
             </div>
 
@@ -87,6 +151,104 @@
     </div>
 
 </main>
+
+<script>
+(function () {
+    const input = document.getElementById('addressText');
+    const list  = document.getElementById('address-suggestions');
+    if (!input || !list) return;
+
+    let debounceTimer;
+    let isValidated = false;
+
+    // If field already has a value on load, mark as validated
+    if (input.value && input.value.trim().length > 0) {
+        input.classList.add('address-validated');
+        isValidated = true;
+    }
+
+    input.addEventListener('input', function () {
+        isValidated = false;
+        input.classList.remove('address-validated');
+
+        clearTimeout(debounceTimer);
+        const query = this.value.trim();
+
+        if (query.length < 3) {
+            list.style.display = 'none';
+            list.innerHTML = '';
+            return;
+        }
+
+        debounceTimer = setTimeout(function () {
+            const url = 'https://nominatim.openstreetmap.org/search'
+                + '?format=json'
+                + '&q=' + encodeURIComponent(query)
+                + '&countrycodes=il'
+                + '&limit=6'
+                + '&addressdetails=1';
+
+            fetch(url, { headers: { 'Accept-Language': 'en' } })
+                .then(function (r) { return r.json(); })
+                .then(function (data) {
+                    list.innerHTML = '';
+
+                    if (!data || data.length === 0) {
+                        list.style.display = 'none';
+                        return;
+                    }
+
+                    data.forEach(function (item) {
+                        // Build a clean short label from structured address parts
+                        const a = item.address || {};
+                        const parts = [];
+                        if (a.house_number) parts.push(a.house_number);
+                        if (a.road)         parts.push(a.road);
+                        const city = a.city || a.town || a.village || a.suburb || '';
+                        if (city)           parts.push(city);
+
+                        const label = parts.length > 0
+                            ? parts.join(', ')
+                            : item.display_name;
+
+                        const li = document.createElement('li');
+                        li.textContent = label;
+                        li.title = item.display_name; // full address on hover
+
+                        li.addEventListener('click', function () {
+                            input.value = label;
+                            input.classList.add('address-validated');
+                            isValidated = true;
+                            list.style.display = 'none';
+                            list.innerHTML = '';
+                        });
+
+                        list.appendChild(li);
+                    });
+
+                    list.style.display = 'block';
+                })
+                .catch(function () {
+                    list.style.display = 'none';
+                });
+        }, 350);
+    });
+
+    // Close suggestions when clicking outside
+    document.addEventListener('click', function (e) {
+        if (!input.contains(e.target) && !list.contains(e.target)) {
+            list.style.display = 'none';
+        }
+    });
+
+    // Close on Escape
+    input.addEventListener('keydown', function (e) {
+        if (e.key === 'Escape') {
+            list.style.display = 'none';
+        }
+    });
+})();
+</script>
 
 </body>
 </html>

@@ -31,18 +31,29 @@ public class UserService {
     }
 
     /**
-     * Updates the mutable profile fields of a user (address and email).
-     * Full name and phone number are not editable by the user — admin only.
+     * Updates the mutable profile fields of a user.
+     * - addressText: required for all users.
+     * - email: optional for all users.
+     * - fullName: only updated when isAdmin is true (system admin privilege).
      */
-    public void updateProfile(Long userId, ProfileUpdateFormDto form) {
+    public void updateProfile(Long userId, ProfileUpdateFormDto form, boolean isAdmin) {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new ResourceNotFoundException("User", userId));
 
-        String address = form.getAddressText();
-        user.setAddressText(address != null && !address.isBlank() ? address.trim() : null);
+        // Address — required, already validated by @NotBlank in the DTO
+        user.setAddressText(form.getAddressText().trim());
 
+        // Email — optional
         String email = form.getEmail();
         user.setEmail(email != null && !email.isBlank() ? email.trim() : null);
+
+        // Full name — system admin only
+        if (isAdmin) {
+            String fullName = form.getFullName();
+            if (fullName != null && !fullName.isBlank()) {
+                user.setFullName(fullName.trim());
+            }
+        }
 
         userRepository.save(user);
     }

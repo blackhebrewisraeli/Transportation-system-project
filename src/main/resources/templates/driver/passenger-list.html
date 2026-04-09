@@ -71,7 +71,7 @@
                         <span th:class="'badge ' +
                             (${p.direction.name() == 'PICKUP'}  ? 'badge-blue' :
                             (${p.direction.name() == 'DROPOFF'} ? 'badge-gray' : 'badge-green'))"
-                              th:text="${p.direction}">
+                              th:text="${#strings.capitalize(#strings.toLowerCase(p.direction))}">
                         </span>
                     </td>
                 </tr>

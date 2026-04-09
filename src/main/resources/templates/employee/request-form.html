@@ -32,7 +32,7 @@
                     <input type="radio"
                            th:field="*{direction}"
                            th:value="${dir}"
-                           th:text="${dir}">
+                           th:text="${#strings.capitalize(#strings.toLowerCase(dir))}">
                 </label>
             </div>
             <span class="field-error" th:if="${#fields.hasErrors('direction')}"

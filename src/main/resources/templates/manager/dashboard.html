@@ -45,14 +45,14 @@
         <tbody>
             <tr th:each="event : ${events}">
                 <td th:text="${#temporals.format(event.eventDate, 'dd/MM/yyyy')}"></td>
-                <td th:text="${event.shiftName}"></td>
+                <td th:text="${#strings.capitalize(#strings.toLowerCase(event.shiftName))}"></td>
                 <td th:text="${event.shiftHours}"></td>
                 <td>
                     <span th:class="'badge ' +
                         (${event.status.name() == 'OPEN'}      ? 'badge-green' :
                         (${event.status.name() == 'LOCKED'}    ? 'badge-blue'  :
                         (${event.status.name() == 'CANCELLED'} ? 'badge-red'   : 'badge-gray')))"
-                          th:text="${event.status}">
+                          th:text="${#strings.capitalize(#strings.toLowerCase(event.status))}">
                     </span>
                 </td>
                 <td th:text="${event.requestCount}"></td>

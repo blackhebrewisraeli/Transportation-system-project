@@ -24,7 +24,7 @@
 
     <!-- Event Header -->
     <div class="form-card" style="margin-bottom:1.5rem;">
-        <h2 th:text="${#temporals.format(event.eventDate, 'EEEE, dd/MM/yyyy')} + ' — ' + ${event.shiftName}"></h2>
+        <h2 th:text="${#temporals.format(event.eventDate, 'EEEE, dd/MM/yyyy')} + ' — ' + ${#strings.capitalize(#strings.toLowerCase(event.shiftName))}"></h2>
         <p style="color:#666; margin-top:0.3rem;" th:text="${event.shiftHours}"></p>
 
         <div style="margin-top:0.75rem; display:flex; gap:1rem; align-items:center; flex-wrap:wrap;">
@@ -32,7 +32,7 @@
                 (${event.status.name() == 'OPEN'}      ? 'badge-green' :
                 (${event.status.name() == 'LOCKED'}    ? 'badge-blue'  :
                 (${event.status.name() == 'CANCELLED'} ? 'badge-red'   : 'badge-gray')))"
-                  th:text="${event.status}">
+                  th:text="${#strings.capitalize(#strings.toLowerCase(event.status))}">
             </span>
             <span th:if="${event.notes}" th:text="'Notes: ' + ${event.notes}" style="color:#555; font-size:0.88rem;"></span>
         </div>
@@ -43,7 +43,7 @@
             <select name="status" class="form-group" style="margin:0; width:auto; padding:0.4rem 0.6rem;">
                 <option th:each="s : ${statuses}"
                         th:value="${s}"
-                        th:text="${s}"
+                        th:text="${#strings.capitalize(#strings.toLowerCase(s))}"
                         th:selected="${s == event.status}">
                 </option>
             </select>
@@ -107,10 +107,10 @@
                     <td th:text="${p.fullName}"></td>
                     <td th:text="${p.phoneNumber}"></td>
                     <td th:text="${p.addressText != null ? p.addressText : '—'}"></td>
-                    <td th:text="${p.direction}"></td>
+                    <td th:text="${#strings.capitalize(#strings.toLowerCase(p.direction))}"></td>
                     <td>
                         <span th:class="'badge ' + (${p.status.name() == 'APPROVED'} ? 'badge-green' : 'badge-gray')"
-                              th:text="${p.status}">
+                              th:text="${#strings.capitalize(#strings.toLowerCase(p.status))}">
                         </span>
                     </td>
                 </tr>

@@ -43,7 +43,7 @@
             <tbody>
                 <tr th:each="event : ${openEvents}">
                     <td th:text="${#temporals.format(event.eventDate, 'dd/MM/yyyy')}"></td>
-                    <td th:text="${event.shiftName}"></td>
+                    <td th:text="${#strings.capitalize(#strings.toLowerCase(event.shiftName))}"></td>
                     <td th:text="${event.shiftHours}"></td>
                     <td th:text="${event.requestCount}"></td>
                     <td>
@@ -82,11 +82,11 @@
             <tbody>
                 <tr th:each="req : ${myRequests}">
                     <td th:text="${#temporals.format(req.eventDate, 'dd/MM/yyyy')}"></td>
-                    <td th:text="${req.shiftName}"></td>
-                    <td th:text="${req.direction}"></td>
+                    <td th:text="${#strings.capitalize(#strings.toLowerCase(req.shiftName))}"></td>
+                    <td th:text="${#strings.capitalize(#strings.toLowerCase(req.direction))}"></td>
                     <td>
                         <span th:class="'badge ' + (${req.status.name() == 'CANCELLED'} ? 'badge-red' : (${req.status.name() == 'APPROVED'} ? 'badge-green' : 'badge-gray'))"
-                              th:text="${req.status}"></span>
+                              th:text="${#strings.capitalize(#strings.toLowerCase(req.status))}"></span>
                     </td>
                     <td>
                         <form th:if="${req.status.name() != 'CANCELLED'}"
